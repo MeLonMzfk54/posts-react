@@ -1,4 +1,5 @@
 import PostCard from "./PostCard.jsx";
+import {useEffect, useState} from "react";
 
 const postsData = [
     {
@@ -23,6 +24,18 @@ const emptyPostsStyles = {marginTop: '1rem', color: '#888'}
 const Posts = () => {
     const title = 'Добро пожаловать сюда'
 
+    const [search, setSearch] = useState('')
+
+    // useEffect(() => {
+    //     const timer = setInterval(() => {
+    //         console.log('tick')
+    //     }, 1000)
+    //
+    //     return () => {
+    //         clearInterval(timer)
+    //     }
+    // }, [])
+
     // const cardsRenderUi = postsData && postsData.length ? postsData.map(post => (
     //     <PostCard
     //         key={post.id}
@@ -39,6 +52,8 @@ const Posts = () => {
                 type="text"
                 placeholder='Поиск поста'
                 className='search-input'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
             />
 
             <section className='posts'>
@@ -47,6 +62,7 @@ const Posts = () => {
                         key={post.id}
                         title={post.title}
                         body={post.body}
+                        setSearch={setSearch}
                     />
                 )) : <p style={emptyPostsStyles}>Постов нет</p>}
             </section>
