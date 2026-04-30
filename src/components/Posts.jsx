@@ -1,30 +1,15 @@
 import PostCard from "./PostCard.jsx";
 import {useEffect, useState} from "react";
 
-const postsData = [
-    {
-        id: 1,
-        title: 'Первый пост',
-        body: 'Описание поста',
-    },
-    {
-        id: 2,
-        title: 'Второй пост',
-        body: 'Описание поста',
-    },
-    {
-        id: 3,
-        title: 'Третий пост',
-        body: 'Описание поста',
-    }
-]
-
 const emptyPostsStyles = {marginTop: '1rem', color: '#888'}
 
 const Posts = () => {
     const title = 'Добро пожаловать сюда'
 
-    const [search, setSearch] = useState('')
+    const [search, setSearch] = useState('');
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     // useEffect(() => {
     //     const timer = setInterval(() => {
@@ -36,6 +21,25 @@ const Posts = () => {
     //     }
     // }, [])
 
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                setLoading(true);
+                setError('');
+                const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+                if (!res.ok) throw new Error('Error fetching posts');
+                const data = await res.json();
+
+                setPosts(data);
+            } catch(e) {
+                setError(e.message || 'error on fetch posts');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchPosts();
+    }, [])
+
     // const cardsRenderUi = postsData && postsData.length ? postsData.map(post => (
     //     <PostCard
     //         key={post.id}
@@ -43,7 +47,7 @@ const Posts = () => {
     //         body={post.body}
     //     />
     // )) : <p style={emptyPostsStyles}>Постов нет</p>
-
+    if (error) return <p style={{color: 'red'}}>{error}</p>;
     return (
         <div className='container'>
             <h2 className='main-title'>{title}</h2>
@@ -57,14 +61,17 @@ const Posts = () => {
             />
 
             <section className='posts'>
-                { postsData && postsData.length ? postsData.map(post => (
+                {posts.length === 0 && !loading && (
+                    <p style={emptyPostsStyles}>Постов нет</p>
+                )}
+
+                { !loading ? posts.map(post => (
                     <PostCard
                         key={post.id}
-                        title={post.title}
-                        body={post.body}
+                        post={post}
                         setSearch={setSearch}
                     />
-                )) : <p style={emptyPostsStyles}>Постов нет</p>}
+                )) : <p>Загрузка постов...</p>}
             </section>
         </div>
     )
