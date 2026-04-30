@@ -1,0 +1,23 @@
+:root {
+    --font-main: "Inter", system-ui, sans-serif;
+    --color-bg: #fafafa;
+    --color-text: #222;
+    --color-primary: #0077ff;
+    --color-border: #e5e5e5;
+    --radius: 10px;
+    --transition: 0.25s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-main);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+}
